@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* * {
+  outline: 2px solid green !important;
+} */
+
+.SplitLayoutContainer {
+  height: 100%;
+}
+
+.MapComponent {
+  height: 100%;
+}
+
+.MainContainer {
+  display: flex;
+  flex-direction: column;
+}
