@@ -188,7 +188,7 @@ function MapComponent() {
                 )
                 }
 
-                <button onClick={getUserLocation} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"></button>
+                {/* <button onClick={getUserLocation} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"></button> */}
             </div>
             <div className="SplitLayoutContainer" slot="main">
                 <Map
