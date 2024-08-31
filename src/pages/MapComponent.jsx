@@ -17,6 +17,7 @@ const mapStyles = {
 };
 
 function MapComponent() {
+    const [isloading, setLoading] = useState(true);
     const WellingtonCityCenter = { lat: -41.2865, lng: 174.7762, accuracy: 100 }
     const [userLocation, setUserLocation] = useState(WellingtonCityCenter);
     const [globalPlaces, setGlobalPlaces] = useState(null);
@@ -31,32 +32,15 @@ function MapComponent() {
         useState(null);
 
     useEffect(() => {
+        setLoading(true);
         if (!routesLibrary || !map) return;
-        // buttonRef.current.click();
-        // getUserLocation();
         getUserLocation().then(() => {
             nearbySearch()
-            // if ((userLocation.accuracy < 100)) {
-            //     console.log("searching..." + userLocation.accuracy)
-            //     nearbySearch()
-            // }
+            setLoading(false);
         });
         setDirectionsService(new routesLibrary.DirectionsService());
         setDirectionsRenderer(new routesLibrary.DirectionsRenderer({ map }));
     }, [routesLibrary, map]);
-    class App extends React.Component {
-        state = { latitude: null, longitude: null };
-
-        componentDidMount() {
-            window.navigator.geolocation.getCurrentPosition(
-                success => this.setState({ latitude: success.coords.latitude, longitude: success.coords.longitude })
-            );
-        }
-
-        render() {
-            return <div>{this.state.latitude}, {this.state.longitude}</div>;
-        }
-    }
 
     async function getUserLocation() {
         if (navigator.geolocation) {
@@ -99,26 +83,16 @@ function MapComponent() {
             region: "nz",
         };
         const { places } = await Place.searchNearby(request);
+        setLoading(false);
 
         if (places.length) {
             const { LatLngBounds } = await google.maps.importLibrary("core");
             const bounds = new LatLngBounds();
-
-            // places.forEach((place) => {
-            //     if (!place.allowsDogs) {
-            //         places.pop(place)
-            //     }
-            // });
-
             const filteredPlaces = places.filter(place => place.allowsDogs);
             setGlobalPlaces(filteredPlaces);
 
             filteredPlaces.forEach((place) => {
                 place.photos.forEach(function (placePhoto) {
-                    //     var url = placePhoto.getUrl({
-                    //         maxWidth: 600,
-                    //         maxHeight: 400
-                    //     });
                 });
                 console.log(place)
                 const AdvancedMarker = new AdvancedMarkerElement({
@@ -128,19 +102,9 @@ function MapComponent() {
                     title: place.displayName,
                 });
                 AdvancedMarker.addListener("click", ({ domEvent, latLng }) => {
-                    // const { target } = domEvent;
-                    // infoWindow.close();
-                    // infoWindow.setContent(marker.title);
-                    // infoWindow.open(marker.map, marker);
-
                     routeTo(latLng);
                 });
-                // markerView.addListener("click", () => {
-                //     // routeTo(place.location);
-                //     console.log(place.location)
-                // });
                 bounds.extend(place.location);
-                //console.log(globalPlaces);
             });
 
             bounds.extend({ lat: userLocation.lat, lng: userLocation.lng })
@@ -183,12 +147,12 @@ function MapComponent() {
         <SplitLayout rowReverse rowLayoutMinWidth={'700'}>
             <div className="SplitLayoutContainer max-h-56" slot="fixed" >
                 <br></br>
+                {isloading ? <p className='ml-2'>Loading...</p> : null}
+
                 {globalPlaces?.length && (
                     <PlaceList ActiveMarker={setActiveMarker} places={globalPlaces} title="Nearest Places"></PlaceList>
                 )
                 }
-
-                {/* <button onClick={getUserLocation} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"></button> */}
             </div>
             <div className="SplitLayoutContainer" slot="main">
                 <Map
@@ -215,48 +179,6 @@ function MapComponent() {
                     >
                         I'm here
                     </InfoWindow>
-
-                    {/* {
-                        globalPlaces?.length && (
-                            globalPlaces.map((place) => (
-                                // <Marker animation={google.maps.Animation.DROP}
-                                //     key={place.id}
-
-                                //     clickable={true}
-                                //     position={{ lat: place.location.lat(), lng: place.location.lng() }}
-                                //     title={place.displayName}
-                                // />
-                                <div></div>
-                                // <PlaceMarker place={place} key={place.id} />
-                            )))
-                    } */}
-
-                    {/* <InfoWindow
-                            marker={activeMarker}
-                            visible={infoWindow}>
-                            <div>
-                                <h1>{selectedPlace.name}</h1>
-                            </div>
-                        </InfoWindow> */}
-                    {/* {
-                            globalPlaces?.length && (
-                                globalPlaces.map((place) => (
-                                    <InfoWindow position={{ lat: place.location.lat(), lng: place.location.lng() }} maxWidth={200}>
-                                        {place.displayName}
-                                    </InfoWindow>
-
-                                )))
-                        } */}
-                    {/* <AdvancedMarker
-                            position={{ lat: 20, lng: 10 }}
-                            title={'AdvancedMarker with customized pin.'}>
-                            <Pin
-                                background={'#22ccff'}
-                                borderColor={'#1e89a1'}
-                                glyphColor={'#0f677a'}></Pin>
-                        </AdvancedMarker>
-                         */}
-
                 </Map>
             </div>
         </SplitLayout>
