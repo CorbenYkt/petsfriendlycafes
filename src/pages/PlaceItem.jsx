@@ -1,22 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AiOutlinePhone } from "react-icons/ai";
 import { AiOutlineWifi } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
+import { useMap, Map, useMapsLibrary, Marker, AdvancedMarker, Pin, InfoWindow, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
+
 
 const PlaceItem = (props) => {
+    const [photoUrl, setPhotoUrl] = useState(null);
+    const map = useMap('gmap');
+    const service = new window.google.maps.places.PlacesService(map);
+    let request = {
+        placeId: props.place.id,
+        fields: ['photos', 'name', 'formatted_address', 'opening_hours', 'geometry'],
+    };
+
+    service.getDetails(request, (placephoto, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && placephoto) {
+            if (placephoto.photos && placephoto.photos.length > 0) {
+                const photo = placephoto.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 });
+                setPhotoUrl(photo);
+            }
+        }
+    });
+
     return (
         <div className='mt-2 pr-2' onClick={() => props.setActiveMarker(props.place)}>
             <div className="overflow-auto lock max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                 <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-700">{props.place.displayName}</h5>
                 <div className='flex flex-col items-center'>
+                    {photoUrl
+                        ? <div>
+                            <img className="rounded-lg" src={photoUrl} alt="" /><br></br>
+                        </div>
+                        :
+                        <div>No image</div>
+                    }
                     {/* {console.log(props.place.allowsDogs)} */}
-                    {props.place.photos
+                    {/* {props.place.photos
                         ? <div>
                             <img className="rounded-lg" src={props.place.photos[0].Fg[0].Fg} alt="" /><br></br>
                         </div>
                         :
                         <div>No image</div>
-                    }
+                    } */}
                 </div>
                 <div className='flex flex-row'>
                     {props.place.nationalPhoneNumber

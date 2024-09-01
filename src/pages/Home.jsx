@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import MapComponent from './MapComponent';
-
+import GoogleMapComponent from './getphoto'
 function Home() {
 
     return (
@@ -15,7 +15,7 @@ function Home() {
             <div className="grow">
                 <div className="MapComponent">
                     <MapComponent />
-                    {/* <Newmap /> */}
+                    {/* <GoogleMapComponent></GoogleMapComponent> */}
                 </div>
             </div >
 

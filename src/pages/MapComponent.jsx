@@ -23,13 +23,13 @@ function MapComponent() {
     const [globalPlaces, setGlobalPlaces] = useState(null);
     const [infoWindow, setInfoWindow] = useState(false);
     const [userLocationmarkerRef, userLocationmarker] = useAdvancedMarkerRef();
-    const buttonRef = useRef(null);
     const map = useMap('gmap');
     const routesLibrary = useMapsLibrary('routes');
     const [directionsService, setDirectionsService] =
         useState(null);
     const [directionsRenderer, setDirectionsRenderer] =
         useState(null);
+    // const [photoUrl, setPhotoUrl] = useState(null);
 
     useEffect(() => {
         setLoading(true);
@@ -89,12 +89,32 @@ function MapComponent() {
             const { LatLngBounds } = await google.maps.importLibrary("core");
             const bounds = new LatLngBounds();
             const filteredPlaces = places.filter(place => place.allowsDogs);
+            // const service = new window.google.maps.places.PlacesService(map);
+
             setGlobalPlaces(filteredPlaces);
 
             filteredPlaces.forEach((place) => {
-                place.photos.forEach(function (placePhoto) {
-                });
-                console.log(place)
+                // let request = {
+                //     placeId: place.id,
+                //     fields: ['photos', 'name', 'formatted_address', 'opening_hours', 'geometry'],
+                // };
+
+                // service.getDetails(request, (placephoto, status) => {
+                //     if (status === window.google.maps.places.PlacesServiceStatus.OK && placephoto) {
+                //         if (placephoto.photos && placephoto.photos.length > 0) {
+                //             const photo = placephoto.photos[0].getUrl({ maxWidth: 400, maxHeight: 400 });
+                //             setPhotoUrl(photo);
+                //             console.log(photoUrl);
+                //         }
+                //     }
+                // });
+
+
+                // place.photos.forEach(function (placePhoto) {
+                //     console.log(place.photos[0].getUrl({ 'maxWidth': 500, 'maxHeight': 500 }))
+                // });
+                
+                //console.log(place)
                 const AdvancedMarker = new AdvancedMarkerElement({
                     map,
                     gmpClickable: true,
