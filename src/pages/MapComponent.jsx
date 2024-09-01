@@ -94,37 +94,17 @@ function MapComponent() {
             setGlobalPlaces(filteredPlaces);
 
             filteredPlaces.forEach((place) => {
-                // let request = {
-                //     placeId: place.id,
-                //     fields: ['photos', 'name', 'formatted_address', 'opening_hours', 'geometry'],
-                // };
 
-                // service.getDetails(request, (placephoto, status) => {
-                //     if (status === window.google.maps.places.PlacesServiceStatus.OK && placephoto) {
-                //         if (placephoto.photos && placephoto.photos.length > 0) {
-                //             const photo = placephoto.photos[0].getUrl({ maxWidth: 400, maxHeight: 400 });
-                //             setPhotoUrl(photo);
-                //             console.log(photoUrl);
-                //         }
-                //     }
-                // });
-
-
-                // place.photos.forEach(function (placePhoto) {
-                //     console.log(place.photos[0].getUrl({ 'maxWidth': 500, 'maxHeight': 500 }))
-                // });
-                
-                //console.log(place)
                 const AdvancedMarker = new AdvancedMarkerElement({
                     map,
                     gmpClickable: true,
-                    position: place.location,
-                    title: place.displayName,
+                    position: filteredPlaces.location,
+                    title: filteredPlaces.displayName,
                 });
                 AdvancedMarker.addListener("click", ({ domEvent, latLng }) => {
                     routeTo(latLng);
                 });
-                bounds.extend(place.location);
+                bounds.extend(filteredPlaces.location);
             });
 
             bounds.extend({ lat: userLocation.lat, lng: userLocation.lng })

@@ -35,14 +35,6 @@ const PlaceItem = (props) => {
                         :
                         <div>No image</div>
                     }
-                    {/* {console.log(props.place.allowsDogs)} */}
-                    {/* {props.place.photos
-                        ? <div>
-                            <img className="rounded-lg" src={props.place.photos[0].Fg[0].Fg} alt="" /><br></br>
-                        </div>
-                        :
-                        <div>No image</div>
-                    } */}
                 </div>
                 <div className='flex flex-row'>
                     {props.place.nationalPhoneNumber
