@@ -6,22 +6,29 @@ import { useMap, Map, useMapsLibrary, Marker, AdvancedMarker, Pin, InfoWindow, u
 
 
 const PlaceItem = (props) => {
+
     const [photoUrl, setPhotoUrl] = useState(null);
     const map = useMap('gmap');
     const service = new window.google.maps.places.PlacesService(map);
-    let request = {
-        placeId: props.place.id,
-        fields: ['photos', 'name', 'formatted_address', 'opening_hours', 'geometry'],
-    };
 
-    service.getDetails(request, (placephoto, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK && placephoto) {
-            if (placephoto.photos && placephoto.photos.length > 0) {
-                const photo = placephoto.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 });
-                setPhotoUrl(photo);
+    getPhotoURL();
+    
+    async function getPhotoURL() {
+        let request = {
+            placeId: props.place.id,
+            fields: ['photos', 'name', 'formatted_address', 'opening_hours', 'geometry'],
+        };
+
+        service.getDetails(request, (placephoto, status) => {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK && placephoto) {
+                if (placephoto.photos && placephoto.photos.length > 0) {
+                    const photo = placephoto.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 });
+                    setPhotoUrl(photo);
+                }
             }
-        }
-    });
+        });
+
+    };
 
     return (
         <div className='mt-2 pr-2' onClick={() => props.setActiveMarker(props.place)}>

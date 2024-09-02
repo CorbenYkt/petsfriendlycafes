@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect, useRef } from 'react';
 import { useMap, Map, useMapsLibrary, Marker, AdvancedMarker, Pin, InfoWindow, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
+import Loading from './Loading';
 
 import {
     PlaceReviews,
@@ -83,7 +84,6 @@ function MapComponent() {
             region: "nz",
         };
         const { places } = await Place.searchNearby(request);
-        setLoading(false);
 
         if (places.length) {
             const { LatLngBounds } = await google.maps.importLibrary("core");
@@ -112,6 +112,8 @@ function MapComponent() {
         } else {
             console.log("No results");
         }
+
+        setLoading(false);
     }
 
     function routeTo(location) {
@@ -139,7 +141,6 @@ function MapComponent() {
     const setActiveMarker = (ActiveMarker) => {
         const place = ActiveMarker
         map.setCenter(place.location)
-        console.log(place.location)
         routeTo(place.location)
     };
 
@@ -147,8 +148,12 @@ function MapComponent() {
         <SplitLayout rowReverse rowLayoutMinWidth={'700'}>
             <div className="SplitLayoutContainer max-h-56" slot="fixed" >
                 <br></br>
-                {isloading ? <p className='ml-2'>Loading...</p> : null}
-
+                {/* {isloading ? <p className='ml-2'>Loading...Do not forget to enable your GPS geolocation</p> : null} */}
+                {isloading ? (
+                    <Loading />
+                ) : (
+                    null
+                )}
                 {globalPlaces?.length && (
                     <PlaceList ActiveMarker={setActiveMarker} places={globalPlaces} title="Nearest Places"></PlaceList>
                 )
