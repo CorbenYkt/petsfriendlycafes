@@ -49,7 +49,7 @@ function MapComponent() {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const { latitude, longitude } = position.coords;
-                        console.log(position.coords)
+                        //console.log(position.coords)
                         setUserLocation({ lat: latitude, lng: longitude });
                         resolve();
                     },
@@ -74,11 +74,11 @@ function MapComponent() {
             fields: ["id", "photos", "rating", "displayName", "editorialSummary", "location", "businessStatus", "allowsDogs", "nationalPhoneNumber", "hasWiFi"],
             locationRestriction: {
                 center: center,
-                radius: 500,
+                radius: 750,
             },
             includedPrimaryTypes: ["american_restaurant", "bakery", "bar", "barbecue_restaurant", "brazilian_restaurant", "breakfast_restaurant", "brunch_restaurant", "cafe", "chinese_restaurant", "coffee_shop", "fast_food_restaurant", "french_restaurant", "greek_restaurant", "hamburger_restaurant", "ice_cream_shop", "indian_restaurant", "indonesian_restaurant", "italian_restaurant", "japanese_restaurant", "korean_restaurant", "lebanese_restaurant", "meal_delivery", "meal_takeaway", "mediterranean_restaurant", "mexican_restaurant", "middle_eastern_restaurant", "pizza_restaurant", "ramen_restaurant", "restaurant", "sandwich_shop", "seafood_restaurant", "spanish_restaurant", "steak_house", "sushi_restaurant", "thai_restaurant", "turkish_restaurant", "vegan_restaurant", "vegetarian_restaurant", "vietnamese_restaurant",
             ],
-            maxResultCount: 10,
+            maxResultCount: 20,
             rankPreference: SearchNearbyRankPreference.POPULARITY,
             language: "en-US",
             region: "nz",
@@ -86,25 +86,26 @@ function MapComponent() {
         const { places } = await Place.searchNearby(request);
 
         if (places.length) {
+            //console.log(places.length + ':was')
             const { LatLngBounds } = await google.maps.importLibrary("core");
             const bounds = new LatLngBounds();
             const filteredPlaces = places.filter(place => place.allowsDogs);
-            // const service = new window.google.maps.places.PlacesService(map);
-
+            //const service = new window.google.maps.places.PlacesService(map);
+            //console.log(filteredPlaces.length + ':became')
             setGlobalPlaces(filteredPlaces);
 
             filteredPlaces.forEach((place) => {
-
                 const AdvancedMarker = new AdvancedMarkerElement({
                     map,
                     gmpClickable: true,
-                    position: filteredPlaces.location,
-                    title: filteredPlaces.displayName,
+                    position: place.location,
+                    title: place.displayName,
                 });
+
                 AdvancedMarker.addListener("click", ({ domEvent, latLng }) => {
                     routeTo(latLng);
                 });
-                bounds.extend(filteredPlaces.location);
+                bounds.extend(place.location);
             });
 
             bounds.extend({ lat: userLocation.lat, lng: userLocation.lng })
@@ -146,13 +147,13 @@ function MapComponent() {
 
     return (
         <SplitLayout rowReverse rowLayoutMinWidth={'700'}>
-            <div className="SplitLayoutContainer max-h-56" slot="fixed" >
+            <div className="SplitLayoutContainer max-h-56 w-full" slot="fixed" >
                 <br></br>
                 {/* {isloading ? <p className='ml-2'>Loading...Do not forget to enable your GPS geolocation</p> : null} */}
                 {isloading ? (
                     <Loading />
                 ) : (
-                    null
+                    <></>
                 )}
                 {globalPlaces?.length && (
                     <PlaceList ActiveMarker={setActiveMarker} places={globalPlaces} title="Nearest Places"></PlaceList>
