@@ -32,3 +32,7 @@ const { Place, SearchNearbyRankPreference } = await google.maps.importLibrary(
 
 
 <a href='https://corbenykt.github.io/petsfriendlycafes'>Goto Pets Friendly Cafes page</a>
+
+Used stack in this project:
+
+<img src='https://img.shields.io/badge/react-black?logo=react' /><img src='https://img.shields.io/badge/javascript-black?logo=javascript' /><img src='https://img.shields.io/badge/TailwindCSS-black?logo=tailwindcss' /><img src='https://img.shields.io/badge/googlemaps-black?logo=googlemaps' />
